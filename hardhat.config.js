@@ -6,9 +6,10 @@ module.exports = {
   networks: {
     hardhat: {
       forking: {
-        url: `https://eth-mainnet.alchemyapi.io/v2/${process.env.ALCHEMY_KEY}`,
-        blockNumber: 13385500
+        url: `https://rpc.ankr.com/fantom`,
+        blockNumber: 28687671
       }
     }
   }
 };
+

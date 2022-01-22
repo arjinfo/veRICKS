@@ -15,13 +15,13 @@ describe("RICKS", function () {
 
     const hour = 60 * 60;
 
-    const wethAddress = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
+    const wftmAddress = "0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83";
 
     let erc721;
     let RICKSFactory;
     let ricks;
     let stakingPool;
-    let weth;
+    let wftm;
 
     let owner;
     let addr1;
@@ -65,7 +65,7 @@ describe("RICKS", function () {
         RICKSFactory = await ethers.getContractFactory("RICKS");
         ricks = await setUpRicks(ERC721Id);
 
-        weth = await ethers.getContractAt("IWETH", wethAddress);
+        wftm = await ethers.getContractAt("IWFTM", wftmAddress);
         
         stakingPoolAddress = await ricks.stakingPool();
         stakingPool = await ethers.getContractAt("StakingPool", stakingPoolAddress);
@@ -178,7 +178,7 @@ describe("RICKS", function () {
 
             await ricks.endAuction();
 
-            const poolBalance = await weth.balanceOf(stakingPool.address);
+            const poolBalance = await wftm.balanceOf(stakingPool.address);
             expect(poolBalance).to.eq(bidAmount);
         });
 
@@ -196,7 +196,7 @@ describe("RICKS", function () {
             await ricks.endAuction();
 
             await stakingPool.connect(addr1).unstakeAndClaimRewards();
-            const balance = await weth.balanceOf(addr1.address);
+            const balance = await wftm.balanceOf(addr1.address);
             expect(balance).to.equal(ethers.utils.parseEther("1.0"));
         });
     });
@@ -255,9 +255,9 @@ describe("RICKS", function () {
      
         });
 
-        it("allows redemtions for weth after buyout", async function () {
+        it("allows redemtions for wftm after buyout", async function () {
 
-            const initialWethBalance = await weth.balanceOf(addr1.address);
+            const initialWftmBalance = await wftm.balanceOf(addr1.address);
 
             await runAuctions(["1.0", "2.0", "3.0", "4.0", "5.0"], ricks);
             const ricksBalance = await ricks.balanceOf(addr1.address);
@@ -267,13 +267,12 @@ describe("RICKS", function () {
 
             const buyoutPaymentDue = ricksBalance.mul(buyoutPricePerToken);
 
-            await ricks.connect(addr1).redeemTokensForWeth();
-            const finalWethBalance = await weth.balanceOf(addr1.address);
+            await ricks.connect(addr1).redeemTokensForWftm();
+            const finalWftmBalance = await wftm.balanceOf(addr1.address);
  
-            expect(buyoutPaymentDue).to.eq(finalWethBalance.sub(initialWethBalance));
+            expect(buyoutPaymentDue).to.eq(finalWftmBalance.sub(initialWftmBalance));
      
         });
     });
         
 });
-

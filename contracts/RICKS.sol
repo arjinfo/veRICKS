@@ -4,25 +4,27 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
-import "./interfaces/IWETH.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "./interfaces/IWFTM.sol";
 import "./StakingPool.sol";
 
 /// @notice RICKS -- https://www.paradigm.xyz/2021/10/ricks/. Auction design based off fractional TokenVault.sol.
-contract RICKS is ERC20, ERC721Holder {
+contract RICKS is Ownable, ERC20, ERC721Holder {
 
     /// ---------------------------
     /// -------- Addresses --------
     /// ---------------------------
     
-    /// @notice weth address
-    address public constant weth = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
+    /// @notice wftm address
+   // address public constant wftm = 0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83;
+    address public constant wftm = 0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83;
 
     /// @notice staking pool address
     address public stakingPool;
 
     /// -----------------------------------
     /// -------- ERC721 INFORMATION --------
-    /// -----------------------------------
+    /// ----------------------------------
 
     /// @notice the ERC721 token address being fractionalized
     address public token;
@@ -110,7 +112,7 @@ contract RICKS is ERC20, ERC721Holder {
                ,uint256 _supply
                ,uint256 _dailyInflationRate
     ) ERC20(_name, _symbol) {
-                    
+
         token = _token;
         id = _id;
         auctionState = AuctionState.empty;
@@ -124,7 +126,28 @@ contract RICKS is ERC20, ERC721Holder {
         dailyInflationRate = _dailyInflationRate;
         initialSupply = _supply;
 
-        stakingPool = address(new StakingPool(address(this), weth));
+        stakingPool = address(new StakingPool(address(this), wftm));
+
+    }
+
+    /// @notice change auction length
+    function changeAuctionLength(uint256 time) public onlyOwner {
+        auctionLength = time;
+    }
+
+    /// @notice change auction interval
+    function changeAuctionInterval(uint256 time) public onlyOwner {
+        auctionInterval = time;
+    }
+
+    /// @notice change minimum bid increase amount
+    function changeMinBidIncrease(uint256 bidAmount) public onlyOwner {
+        minBidIncrease = bidAmount;
+    }
+
+    /// @notice change daily inflation rate
+    function changeDailyInflationRate(uint256 rate) public onlyOwner {
+        dailyInflationRate = rate;
     }
 
     /// @notice RICKS starts in `empty` state until the specified ERC721 has been transfered to the contract.
@@ -182,7 +205,7 @@ contract RICKS is ERC20, ERC721Holder {
             auctionEndTime += 15 minutes;
         }
 
-        _sendETHOrWETH(winning, currentPrice);
+        _sendFTMOrWFTM(winning, currentPrice);
 
         currentPrice = msg.value;
         winning = payable(msg.sender);
@@ -203,8 +226,8 @@ contract RICKS is ERC20, ERC721Holder {
         auctionEndTime = block.timestamp;
         numberOfAuctions += 1;
         
-        IWETH(weth).deposit{value: currentPrice}();
-        IWETH(weth).approve(stakingPool, currentPrice);
+        IWFTM(wftm).deposit{value: currentPrice}();
+        IWFTM(wftm).approve(stakingPool, currentPrice);
         StakingPool(stakingPool).depositReward(currentPrice);
         _mint(winning, tokenAmountForAuction);
 
@@ -252,15 +275,15 @@ contract RICKS is ERC20, ERC721Holder {
         return pricePerToken;
     }
 
-    /// @notice After buyout has been completed, remaining holders are able to redeem tokens for weth
-    function redeemTokensForWeth() external {
+    /// @notice After buyout has been completed, remaining holders are able to redeem tokens for wftm
+    function redeemTokensForWftm() external {
         require(auctionState == AuctionState.finalized, "cannot redeem yet");
         uint256 balance = balanceOf(msg.sender);
         uint256 paymentDue = balance * finalBuyoutPricePerToken;
     
         _burn(msg.sender, balance);
-        IWETH(weth).deposit{value: paymentDue}();
-        IWETH(weth).transfer(msg.sender, paymentDue);
+        IWFTM(wftm).deposit{value: paymentDue}();
+        IWFTM(wftm).transfer(msg.sender, paymentDue);
     }
 
     /// @notice keep track of the most recent 5 prices per shard
@@ -282,16 +305,16 @@ contract RICKS is ERC20, ERC721Holder {
     }
 
 
-    // Will attempt to transfer ETH, but will transfer WETH instead if it fails.
-    function _sendETHOrWETH(address to, uint256 value) internal {
-        // Try to transfer ETH to the given recipient.
-        if (!_attemptETHTransfer(to, value)) {
-            IWETH(weth).deposit{value: value}();
-            IWETH(weth).transfer(to, value);
+    // Will attempt to transfer FTM, but will transfer WFTM instead if it fails.
+    function _sendFTMOrWFTM(address to, uint256 value) internal {
+        // Try to transfer FTM to the given recipient.
+        if (!_attemptFTMTransfer(to, value)) {
+            IWFTM(wftm).deposit{value: value}();
+            IWFTM(wftm).transfer(to, value);
         }
     }
 
-    function _attemptETHTransfer(address to, uint256 value)
+    function _attemptFTMTransfer(address to, uint256 value)
         internal
         returns (bool)
     {
