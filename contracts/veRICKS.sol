@@ -9,7 +9,7 @@ import "./interfaces/IWFTM.sol";
 import "./StakingPool.sol";
 
 /// @notice RICKS -- https://www.paradigm.xyz/2021/10/ricks/. Auction design based off fractional TokenVault.sol.
-contract RICKS is Ownable, ERC20, ERC721Holder {
+contract veRICKS is Ownable, ERC20, ERC721Holder {
 
     /// ---------------------------
     /// -------- Addresses --------
@@ -76,10 +76,10 @@ contract RICKS is Ownable, ERC20, ERC721Holder {
     /// -------- Inflation Parameters -------
     /// -------------------------------------
 
-    /// @notice rate of daily RICKS issuance. 3 decimals, ie. 100 = 10%
+    /// @notice rate of daily veRICKS issuance. 3 decimals, ie. 100 = 10%
     uint256 public dailyInflationRate;
 
-    /// @notice initial supply of RICKS tokens
+    /// @notice initial supply of veRICKS tokens
     uint256 public initialSupply;
 
     /// ------------------------
@@ -150,7 +150,7 @@ contract RICKS is Ownable, ERC20, ERC721Holder {
         dailyInflationRate = rate;
     }
 
-    /// @notice RICKS starts in `empty` state until the specified ERC721 has been transfered to the contract.
+    /// @notice veRICKS starts in `empty` state until the specified ERC721 has been transfered to the contract.
     /// This function transfers ERC721 to contract, mints erc20s and start inflation schedule
     function activate() public {
         require(auctionState == AuctionState.empty, "already active");
@@ -213,7 +213,7 @@ contract RICKS is Ownable, ERC20, ERC721Holder {
         emit Bid(msg.sender, msg.value);
     }
 
-    /// @notice an external function to end an auction after the timer has run out. Mint RICKS for
+    /// @notice an external function to end an auction after the timer has run out. Mint veRICKS for
     /// winer and assign payout
     function endAuction() external {
         require(auctionState == AuctionState.active, "cannot end auction that is not live");

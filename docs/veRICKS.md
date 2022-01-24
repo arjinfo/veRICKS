@@ -3,7 +3,7 @@
 | Protocol | Fractionalization | Inflation mechanism | Buybacks | Purchase | Shard Rewards |
 | --- | :---: | :---: | :---: | --- | :---: |
 | RICKS  | ✅ | ✅ | ✅ | Buy NFTs with Ether. | ❌ | 
-| veRICKS  | ✅ | ✅ | ✅ | Buy NFTs with ve(3,3) `token` | shard rewards for staking with the veRICKS protocol |
+| veRICKS  | ✅ | ✅ | ✅ | Buy NFTs with ve(3,3) `token` | Shard rewards for staking with the veRICKS protocol on auctions after genesis |
 
 # The veRICKS Protocol fractionalizes an NFT (ERC-721) into shards (ERC-20). 
 
@@ -17,7 +17,7 @@ A user bids on a veRICKS auction via a smart contract call on Fantom. This is th
 
 **Note**, an individual selling shards does so on a DEX. The veRICKS protocol is the only entity that sells shards via auction.
 
-# veRICKS Protocol ensures shards can be converted back into underlying NFT.
+# veRICKS Protocol ensures shards can be converted back into the corresponding NFT.
 
 Suppose our user is holding veRICKS shards. I have two options: (1) Stake the shards to get additional emission rewards. (2) Sell shards on a DEX to cash out.
 
