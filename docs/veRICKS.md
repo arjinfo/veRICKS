@@ -1,21 +1,15 @@
-# veRICKS are RICKS from another dimension.
+# veRICKS are RICKS from another dimension
 
 | Protocol | Fractionalization | Inflation mechanism | Buybacks | Purchase | Shard Rewards |
 | --- | :---: | :---: | :---: | --- | :---: |
 | RICKS  | ✅ | ✅ | ✅ | Buy NFTs with Ether. | ❌ | 
 | veRICKS  | ✅ | ✅ | ✅ | Buy NFTs with ve(3,3) `token` | Shard rewards for staking with the veRICKS protocol on auctions after genesis |
 
-# The veRICKS Protocol fractionalizes an NFT (ERC-721) into shards (ERC-20). 
+## The veRICKS Protocol fractionalizes an NFT (ERC-721) into shards (ERC-20)
 
 After this initial fractionalizing, the "voter escrow" Recurrently Issued Collectively Kept Shards (veRICKS) Protocol will continually mint new shards on a schedule and auction them to the public. The proceeds of these auctions are distributed to veRICKS (shard) holders.
 
-#### Q: Where does a veRICKS auction take place? 
 
-A user bids on a veRICKS auction via a smart contract call on Fantom. This is the [veRICKS](../contracts/veRICKS.sol) contract. People buy the shards with Solidly `token`. Users have two avenues by which they can get `token` to purchase shards. 
-  - Option 1: Users can provide liquidity on Fantom in a Solidly-compatible pool (BaseV1Pair), stake their LP tokens on that pool, and get `token` from the Solidly Protocol.
-  - Option 2: Since `token` (ERC-20) is transferable, it will have liquidity on some DEX, meaning the veRICKS user could buy `token` on an exchange without providing liquidity. 
-
-**Note**, an individual selling shards does so on a DEX. The veRICKS protocol is the only entity that sells shards via auction.
 
 # veRICKS Protocol ensures shards can be converted back into the corresponding NFT.
 
@@ -63,8 +57,10 @@ There's a problem with the second point. Currently, there's no specific liquidit
 
 ### The veRICKS flywheel (WIP)
 
-veRICKS enables allows for distribution of 
+
 `voting` -> `token` -> `auction distribution`
+
+`auction distribution` increases voting power and the cycle continues
 
 ### Shards Distribution
 
@@ -79,8 +75,6 @@ the ratio of the amount distributed to owner $= \frac{n d t v} {\sum_{i}{n_i d_i
 - skipped 0xDAO vamp attack (v)
   * bonus rate: xxx%
 - amount of weve at snapshot (n)
-
-
 
 ## Glossary
 
